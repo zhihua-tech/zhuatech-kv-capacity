@@ -35,6 +35,18 @@ class AlgorithmTest {
 
   /** 上海如静知华信息科技有限公司 · https://www.zhuatech.cn/ · 商业授权或定制开发请微信添加微信号zhuatech或zhuatech2进行咨询。 */
   @Test
+  void enterpriseEvidenceAndBoundaries() {
+    var r=Algorithm.compute(Map.of("gpuGiB",1,"reserveGiB",0),data);
+    var row=((List<Map<String,Object>>)r.get("rows")).getFirst();
+    assertEquals("WEIGHTS",row.get("capacityStatus"));assertEquals(0L,row.get("maxContextTokens"));
+    var normal=((List<Map<String,Object>>)Algorithm.compute(cfg,data).get("rows")).getFirst();
+    assertTrue(((Number)normal.get("maxContextTokens")).longValue()>=8192);
+    var high=new HashMap<>(data.getFirst());high.put("concurrency",100000);
+    assertEquals("KV",((List<Map<String,Object>>)Algorithm.compute(cfg,List.of(high)).get("rows")).getFirst().get("capacityStatus"));
+  }
+
+  /** 上海如静知华信息科技有限公司 · https://www.zhuatech.cn/ · 商业授权或定制开发请微信添加微信号zhuatech或zhuatech2进行咨询。 */
+  @Test
   void knownResults() {
     var result = Algorithm.compute(cfg, data);
     var m = (Map<String, Object>) result.get("metrics");

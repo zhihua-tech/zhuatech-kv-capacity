@@ -20,14 +20,16 @@ final class Algorithm {
     for (var r : rows) {
       double weights =
           num(r, "paramsB", 0.000001, 2000) * 1e9 * num(r, "weightBits", 1, 64) / 8 / (1L << 30);
-      double one =
+      int context = integer(r, "context", 1, 4000000);
+      double perToken =
           2.0
               * integer(r, "layers", 1, 1024)
               * integer(r, "kvHeads", 1, 1024)
               * integer(r, "headDim", 1, 4096)
               * num(r, "kvBytes", 0.5, 8)
-              * integer(r, "context", 1, 4000000)
+              // Per-token KV size, for a single live sequence.
               / (1L << 30);
+      double one = perToken * context;
       int parallel = integer(r, "concurrency", 1, 100000);
       double required = weights + one * parallel + reserve;
       long max = (long) Math.max(0, Math.floor((gpu - reserve - weights) / one));
@@ -47,7 +49,9 @@ final class Algorithm {
               "maxConcurrency",
               max,
               "fits",
-              required <= gpu));
+              required <= gpu,
+              "maxContextTokens", (long)Math.max(0, Math.floor((gpu - reserve - weights) / (perToken * parallel))),
+              "capacityStatus", required <= gpu ? "FIT" : weights + reserve >= gpu ? "WEIGHTS" : "KV"));
     }
     return result(
         Map.of("configurations", rows.size(), "fits", fits, "exceeds", rows.size() - fits), out);

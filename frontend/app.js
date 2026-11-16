@@ -56,6 +56,8 @@ const labels = {
   context: "编排正文",
 };
 const resultLabels = {
+  maxContextTokens: "单序列理论上限（token）",
+  capacityStatus: "容量判定",
   ...labels,
   ...{
     knownTokens: "词表命中数",
@@ -112,6 +114,9 @@ const resultLabels = {
   },
 };
 const choices = {
+  WEIGHTS: "权重与预留已占满",
+  KV: "KV 容量不足",
+  FIT: "容量满足",
   KEEP: "保留",
   REVIEW_DUPLICATE: "待查重",
   CONSENSUS: "一致",
@@ -270,7 +275,7 @@ function table(parent, keys, rows, action) {
     for (const k of keys)
       line.insertCell().textContent =
         typeof row[k] === "string" &&
-        ["decision", "action", "reason", "split"].includes(k)
+        ["decision", "action", "reason", "split","reviewReason","capacityStatus","initialReason"].includes(k)
           ? choices[row[k]] || row[k]
           : fmt(row[k]);
     if (action) line.insertCell().append(action(row));

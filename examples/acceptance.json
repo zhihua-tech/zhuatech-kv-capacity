@@ -1,0 +1,20 @@
+{
+  "title": "显存瓶颈与上下文上限",
+  "settings": {
+    "gpuGiB": 1,
+    "reserveGiB": 0
+  },
+  "rows": [
+    {
+      "id": "tiny",
+      "paramsB": 7,
+      "weightBits": 4,
+      "layers": 32,
+      "kvHeads": 8,
+      "headDim": 128,
+      "kvBytes": 2,
+      "context": 8192,
+      "concurrency": 12
+    }
+  ]
+}
