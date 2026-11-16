@@ -1,0 +1,20 @@
+{
+  "title": "推理部署规划样例",
+  "settings": {
+    "gpuGiB": 24,
+    "reserveGiB": 3
+  },
+  "rows": [
+    {
+      "id": "候选配置-A",
+      "paramsB": 7,
+      "weightBits": 4,
+      "layers": 32,
+      "kvHeads": 8,
+      "headDim": 128,
+      "kvBytes": 2,
+      "context": 8192,
+      "concurrency": 12
+    }
+  ]
+}
